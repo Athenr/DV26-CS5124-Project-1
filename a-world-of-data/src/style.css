@@ -4,11 +4,69 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgb(0, 0, 0);
+  background-color: #85654D;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  height: 1000vh;
+}
+
+main {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#header {
+  background: url("../public/banner.svg") #85654D 50% / cover no-repeat;
+  width: 100%;
+  flex-shrink: 0;
+  align-self: center;
+  aspect-ratio: 1139/405;
+
+  color: #2F482D;
+  text-align: center;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #7DBD77;
+  font-family: Bungee;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+#header-aworldofdata {
+  font-size: 60px;
+  margin: 10% 0 0 0;
+  display: flex;
+  height: 80px;
+  flex-direction: column;
+  justify-content: center;
+  }
+
+#header-thecerealproject {
+  font-size: 75px;
+  margin: 0;
+  display: flex;
+  height: 80px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#L1-div-DV2 {
+  
 }
