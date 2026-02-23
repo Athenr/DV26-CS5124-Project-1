@@ -17,6 +17,12 @@
         <h1 id="header-thecerealproject">The Cereal Project</h1>
       </div>
 
+      <div id="L1-div-bargraph">
+        <div id="L1-div-bargraph-chart"></div>
+        <script type="module" src="./src/components/L1-bargraph.js"></script>
+      </div>
+
+      <!-- DV 3 - Scatterplot -->
       <div id="L1-div-scatterplot">
         <div id="L1-div-scatterplot-chart"></div>
         <div id="L1-div-scatterplot-slider-container">
@@ -27,8 +33,23 @@
         </div>
         <script type="module" src="./src/components/L1-scatterplot.js"></script>
       </div>
-
-    </main>
-  </body>
-
-</html>
+      
+      <!-- DV 4 - Choropleth -->
+      <div id="L2-div-choropleth">
+        <div id="L2-div-choropleth-chart" width="1000" height="600"></div>
+        <div id="L2-div-choropleth-popup"></div>
+      
+        <div id="L2-div-choropleth-slider-container">
+          <input type="range" id="L2-div-choropleth-year-slider">
+          <div>
+            Year: <span id="L2-div-choropleth-year-label"></span>
+          </div>
+        </div>
+      
+        <script type="module" src="./src/components/L2-choropleth.js"></script>
+      </div>
+      
+      </main>
+      </body>
+      
+      </html>
