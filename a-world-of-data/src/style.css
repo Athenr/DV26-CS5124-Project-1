@@ -29,11 +29,12 @@ main {
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-direction: column;
 }
 
 #header {
-  background: url("../public/banner.svg") #85654D 50% / cover no-repeat;
+  background: url("/banner.svg") #85654D 50% / cover no-repeat;
   width: 100%;
   flex-shrink: 0;
   align-self: center;
@@ -67,6 +68,78 @@ main {
   justify-content: center;
 }
 
-#L1-div-DV2 {
-  
+#L1-div-scatterplot {
+  display: flex;
+  height: 650px;
+  padding: 15px 15px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+  background: #5C4635;
+  border-radius: 35px;
+}
+
+#L1-div-scatterplot-chart {
+  width: 800px;
+  margin: 0 auto;
+}
+
+      /* L1 Div Scatterplot Slider... */
+#L1-div-scatterplot-slider-container {
+  width: 800px;
+  margin: 20px auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  color: #c4c4c4;
+}
+#L1-div-scatterplot-year-slider {
+  width: 500px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+#L1-div-scatterplot-year-slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #699F64, #568252, #699F64);
+  box-shadow:0 0 6px rgba(125,189,119,0.4);
+}
+#L1-div-scatterplot-year-slider::-moz-range-track {
+  height: 8px;
+  border-radius: 10px;
+  background: linear-gradient(to right, #7DBD77, #2F482D);
+}
+#L1-div-scatterplot-year-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: #705541;
+  border: 3px solid #7DBD77;
+  box-shadow:0 0 10px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+#L1-div-scatterplot-year-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  box-shadow:0 0 15px rgba(125,189,119,0.7);
+}
+
+/* Chart */
+.domain, .tick line {
+  stroke: #568252;
+  stroke-width: 4px;
+}
+
+.tick text {
+  fill: #c4c4c4;
+  font-size: 12px;
+  font-weight: 600;
 }
