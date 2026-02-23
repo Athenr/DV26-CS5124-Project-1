@@ -36,17 +36,31 @@ svg.append("text")
 svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("x", -height / 2)
-    .attr("y", 20)
+    .attr("y", 40)
     .attr("text-anchor", "middle")
     .style("fill", "#c4c4c4")
     .style("font-weight", "600")
     .text("Agriculture GDP Share (%)");
 
-// CSVs
+    // Popups
+const popup = d3.select("body")
+    .append("div")
+    .style("position", "absolute")
+    .style("background", "rgba(0, 0, 0, 0.85)")
+    .style("color", "#ffffff")
+    .style("padding", "10px 14px")
+    .style("border-radius", "8px")
+    .style("font-size", "13px")
+    .style("pointer-events", "none")
+    .style("opacity", 0)
+    .style("box-shadow", "0 4px 12px rgba(0,0,0,0.3)");
+
+    // CSVs
 Promise.all([
     d3.csv("/data/cereal-yield.csv", d3.autoType),
-    d3.csv("/data/agriculture-share-gdp.csv", d3.autoType)
-]).then(([yieldData, gdpData]) => {
+    d3.csv("/data/agriculture-share-gdp.csv", d3.autoType),
+    d3.csv("/data/country_codes_and_continents.csv", d3.autoType)
+]).then(([yieldData, gdpData, continentData]) => {
 
     // Year slider thing
     const years = [...new Set(yieldData.map(d => d.Year))].sort();
@@ -65,6 +79,52 @@ Promise.all([
         update(year);
     });
 
+    // Continent stuff
+    const continentMap = new Map(
+        continentData.map(d => [d["Country Code"], d.Continent])
+    );
+
+    const colorScale = d3.scaleOrdinal()
+        .domain([
+            "Africa",
+            "Asia",
+            "Europe",
+            "North America",
+            "South America",
+            "Oceania"
+        ])
+        .range([
+            "#ff5757", // AF
+            "#ff9c4a", // AS
+            "#26b9a8", // EU
+            "#4960e0", // NA
+            "#7fda61", // SA
+            "#8e3fc4"  // OC
+        ]);
+
+    // Continent legend
+    const legend = svg.append("g")
+        .attr("transform", `translate(${width - 145}, ${30})`);
+    const continents = colorScale.domain();
+    const legendItems = legend.selectAll(".legend-item")
+        .data(continents)
+        .enter()
+        .append("g")
+        .attr("class", "legend-item")
+        .attr("transform", (d, i) => `translate(0, ${i * 25})`);
+    legendItems.append("rect")
+        .attr("width", 14)
+        .attr("height", 14)
+        .attr("rx", 3)
+        .attr("fill", d => colorScale(d));
+    legendItems.append("text")
+        .attr("x", 22)
+        .attr("y", 11)
+        .style("fill", "#ffffff")
+        .style("font-size", "13px")
+        .style("font-weight", "600")
+        .text(d => d);
+
     function update(selectedYear) {
 
         const yieldFiltered = yieldData.filter(d => d.Year === selectedYear);
@@ -78,7 +138,8 @@ Promise.all([
                     Entity: d.Entity,
                     Code: d.Code,
                     yield: d["Cereals - Yield (tonnes per hectare)"],
-                    gdp: match["Agriculture, forestry, and fishing, value added (% of GDP)"]
+                    gdp: match["Agriculture, forestry, and fishing, value added (% of GDP)"],
+                    continent: continentMap.get(d.Code)
                 };
             }
         }).filter(d => d && d.yield && d.gdp);
@@ -96,22 +157,27 @@ Promise.all([
             .attr("cx", d => xScale(d.yield))
             .attr("cy", d => yScale(d.gdp))
             .attr("r", 5)
-            .attr("fill", "#7DBD77")
-            .attr("opacity", 0.85)
-            .attr("stroke", "#436540")
+            .attr("fill", d => colorScale(d.continent))
+            .attr("stroke", "#ffffff")
             .attr("stroke-width", 1.5)
-            .on("mouseover", function () {
-                d3.select(this)
-                    .transition()
-                    .duration(150)
-                    .attr("r", 7);
+
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("r", 7);
+                popup.style("opacity", 1).html(`
+                    <strong>${d.Entity}</strong><br/>
+                    Continent: ${d.continent}<br/>
+                    Yield: ${d.yield.toFixed(2)} t/ha<br/>
+                    Agri GDP: ${d.gdp.toFixed(2)}%
+                `);
+            })
+            .on("mousemove", function (event) {
+                popup.style("left", (event.pageX + 15) + "px").style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", function () {
-                d3.select(this)
-                    .transition()
-                    .duration(150)
-                    .attr("r", 5)
+                d3.select(this).attr("r", 5);
+                popup.style("opacity", 0);
             })
+
             .merge(circles)
             .transition()
             .duration(250)
