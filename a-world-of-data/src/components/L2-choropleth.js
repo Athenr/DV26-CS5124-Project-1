@@ -177,6 +177,9 @@ Promise.all([
         .attr("transform", `translate(0, ${legendHeight})`)
         .call(legendAxis);
 
+    axisGroup.selectAll("text")
+        .style("fill", "black");
+
     axisGroup.select(".domain").remove();
 
     legendGroup.append("text")
@@ -185,5 +188,6 @@ Promise.all([
         .attr("text-anchor", "middle")
         .style("font-size", "13px")
         .style("font-weight", 700)
-        .text("Cereal Yield (tonnes per hectare)");
+        .text("Cereal Yield (tonnes per hectare)")
+        .style("color", "#000000");
 });
