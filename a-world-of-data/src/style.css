@@ -71,7 +71,7 @@ main {
 /* All graphs */
 #L1-div-scatterplot {
   display: flex;
-  height: 650px;
+  /* height: 650px; */
   padding: 15px 15px;
   flex-direction: column;
   align-items: flex-start;
@@ -84,8 +84,8 @@ main {
 
 #L1-div-bargraph {
   display: flex;
-  height: 650px;
-  padding: 15px 15px;
+  /* height: 650px; */
+  padding: 25px 15px;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
@@ -97,7 +97,7 @@ main {
 
 #L2-div-choropleth {
   display: flex;
-  height: 750px;
+  height: 650px;
   padding: 15px 15px;
   flex-direction: column;
   align-items: flex-start;

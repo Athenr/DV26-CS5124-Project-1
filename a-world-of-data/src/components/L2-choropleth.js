@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 const width = 800;
-const height = 550;
+const height = 500;
 
 const svg = d3.select("#L2-div-choropleth-chart")
     .append("svg")
@@ -23,8 +23,10 @@ Promise.all([
 ]).then(([world, data]) => {
 
     projection.fitSize([width, height], world);
+    projection.center([10, 0]);
 
     data.forEach(d => {
+        d.Code = d.Code.trim();
         d.Year = +d.Year;
         d["Cereals - Yield (tonnes per hectare)"] = 
             +d["Cereals - Yield (tonnes per hectare)"];
@@ -44,7 +46,7 @@ Promise.all([
         const yearData = {};
         data.filter(d => d.Year === year)
             .forEach(d => {
-                yearData[d.Code] = d["Cereals - Yield (tonnes per hectare)"];
+                yearData[String(d.Code)] = d["Cereals - Yield (tonnes per hectare)"];
             });
         return yearData;
     }
@@ -59,15 +61,15 @@ Promise.all([
             .attr("class", "country")
             .attr("d", path)
             .attr("fill", d => {
-                const value = yearData[d.id];
-                return value ? colorScale(value) : "#ccc";
+                const value = yearData[String(d.id)];
+                return value !== undefined ? colorScale(value) : "#808080";
             })
             .on("mouseover", function(event, d) {
-                const value = yearData[d.id];
+                const value = yearData[String(d.id)];
                 popup.style("opacity", 1)
                     .html(`
                         <strong>${d.properties.name}</strong><br>
-                        Cereal Yield: ${value ? value.toFixed(2) + " t/ha" : "No data"}
+                        Cereal Yield: ${value !== undefined ? value.toFixed(5) + " t/ha" : "No data"}
                     `)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 20) + "px");
