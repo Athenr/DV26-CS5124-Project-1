@@ -8,19 +8,35 @@
     <title>The Cereal Project</title>
     <!-- Font -->
     <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lalezar&display=swap" rel="stylesheet">
   </head>
 
   <body>
     <div id="header">
-        <h1 id="header-aworldofdata">A World Of Data</h1>
-        <h1 id="header-thecerealproject">The Cereal Project</h1>
-      </div>
+      <h1 id="header-aworldofdata">A World Of Data</h1>
+      <h1 id="header-thecerealproject">The Cereal Project</h1>
+      <h2 id="header-name">Published by Anne Ning</h2>
+      <h2 id="header-source">
+        Data retrieved from <a href="https://ourworldindata.org/" target="_blank">Our World In Data</a>
+      </h2>
+    </div>
     <main>
 
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">Why are cereals important?</h3>
+        <p class="L0-text-paragraph">Cereal crops or cereals make up the backbone of the diets of billions of people around the world. According to Gates Agricultural Innovations, Rice, wheat, and corn alone make up nearly half of the annual calories consumed worldwide. We produce almost three billion tonnes of cereals every year. With the global population steadily rising and agricultural innovation reaching its limits, it is important to look at the numbers to understand how civilization got here and what the future holds.</p>
+      </div>
+      
       <!-- DV 1 - Bargraph -->
       <div id="L1-div-bargraph">
         <div id="L1-div-bargraph-chart"></div>
         <script type="module" src="./src/components/L1-bargraph.js"></script>
+      </div>
+      
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">How has land usage changed over time and what concerns are there?</h3>
+        <p class="L0-text-paragraph">As agricultural technology has improved over the decades, land usage has become more efficient. That is, per hectare, more tonnage of grains has been able to be produced. Small deviations in the general upward trend occur due to the performance of the harvest for that year. Despite this, scientists grow concerned that the limits of how much can be grown in a single hectare are being reached and that alternative solutions may need to be found to feed the growing population. Additionally, climate change may have a hand in reducing yields and therefore, reducing efficiency. Whether land efficiency can stay on track to grow will largely depend on our ability to address climate change, discover new methods and technologies, and handle the logistics of their distribution.</p>
       </div>
 
       <!-- DV 2 - Histogram -->
@@ -35,6 +51,11 @@
         <script type="module" src="./src/components/L1-histogram.js"></script>
       </div>
 
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">How much does cereal production weigh into the economy?</h3>
+        <p class="L0-text-paragraph">Agricultural production, largely in the form of cereals, stood at the center of international commerce and business for many decades. In the year 1960, for many countries (who we have data for) agriculture composed anywhere from 25% to 50% of their national GDP. However, with advances in manufacturing and later, the advent of the internet and digital technologies, agriculture's share of national GDP has sharply fallen. As of 2024, agriculture contributes 5% to 10% of most nations' GDPs. Greater advances in agricultural technology also means that less people are needed to work a farm, with those displaced being able to go into new and emerging industries. Some may mistake this as a sign of weakness, but those well informed know that while not as profitable as technology, agriculture and cereal production remains an essential and heavily subsidized sector of the economy. Nevertheless, agricultural GDP share remains strong in developing countries such as those in Africa and Asia.</p>
+      </div>
+      
       <!-- DV 3 - Scatterplot -->
       <div id="L1-div-scatterplot">
         <div id="L1-div-scatterplot-chart"></div>
@@ -46,7 +67,17 @@
         </div>
         <script type="module" src="./src/components/L1-scatterplot.js"></script>
       </div>
-      
+
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">How do agricultural GDP share and land efficiency correlate?</h3>
+        <p class="L0-text-paragraph">There is a weak, but visible correlation between a nation's agricultural land efficiency and their agricultural GDP share. The more efficiently a nation uses their land for agriculture, the more agricultural GDP share falls. This can be explained in the lens of country development. More developed countries have access to technologies, resources, and methods that allow them to make very efficient use of their agricultural land. These same countries, however, also have more profitable and substantive industries, such as technology and manufacturing, that carry their annual GDP more than agriculture. On the other hand, developing countries do not have access to these same resources and thus, are more likely to use less efficient methods, such as manual labor, for agriculture. Additionally, these countries have an economy that is more goods-based than service-based which means a higher agricultural GDP share.</p>
+      </div>
+
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">Do country size and climate matter?</h3>
+        <p class="L0-text-paragraph">Another trend reveals itself in the form of countries that are small, arid, or both. Arid countries, such as those in the Middle East, have to ensure that their crop yield (and thus, efficiency) is sufficiently high to feed their population while safeguarding against the possible failure of a bad harvest due to climate. Smaller countries, such as the United Arab Emirates and Belgium, have less overall land to use and thus, whatever land that they use for agriculture, they have a key interest in maximizing its agricultural output. Countries that are both small and arid, like Oman and the United Arab Emirates, dominate modern land efficiencies despite the escalating threat of climate change coupled with their already historically arid region.</p>
+      </div>
+
       <!-- DV 4 - Choropleth -->
       <div id="L2-div-choropleth">
         <div id="L2-div-choropleth-chart" width="1000" height="600"></div>
@@ -58,10 +89,14 @@
             Year: <span id="L2-div-choropleth-year-label"></span>
           </div>
         </div>
-      
         <script type="module" src="./src/components/L2-choropleth.js"></script>
       </div>
-      
+
+      <div class="L0-text-div">
+        <h3 class="L0-text-header">Does cereal crop agriculture still matter?</h3>
+        <p class="L0-text-paragraph">Even as the world shifts its focus to technologies like artificial intelligence for new economic development and answers to unsolved problems, cereals remain as important as ever. With only a few exceptions, virtually every recorded country in the world has been pushing their agricultural efficiency and total cereal output higher and higher. While the challenges of overpopulation and climate loom ahead and threaten the sufficiency of cereal yields, humanity must do its absolute best for it has no choice: cereals make civilization possible.</p>
+      </div>
+
       </main>
       </body>
       
