@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 
 const width = 800;
-const height = 550;
+const height = 500;
 const legendSpace = 80;
 
 const svg = d3.select("#L2-div-choropleth-chart")
