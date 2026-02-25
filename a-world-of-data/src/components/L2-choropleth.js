@@ -212,7 +212,7 @@ Promise.all([
             if (currentDataset === "yield") {
                 return d >= 10 ? "10.0+" : d3.format(".1f")(d);
             } else {
-                return d >= 100 ? "100+" : d3.format(".1f")(d);
+                return d >= 100 ? "100" : d3.format(".1f")(d);
             }
         });
     const axisGroup = legendGroup.append("g")
