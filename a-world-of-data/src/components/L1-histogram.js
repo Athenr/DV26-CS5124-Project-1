@@ -1,5 +1,9 @@
 import * as d3 from "d3";
 
+if (!window.selectedRanges) {
+    window.selectedRanges = new Set();
+}
+
 const width = 800;
 const height = 500;
 const margin = { top: 40, right: 40, bottom: 60, left: 80 };
@@ -92,18 +96,20 @@ Promise.all([
     const legend = svg.append("g")
         .attr("transform", `translate(${width - 145}, ${30})`);
     const continents = colorScale.domain();
-    const legendItems = legend.selectAll(".legend-item")
+    const legendGroup = legend.selectAll(".legend-item")
         .data(continents)
         .enter()
         .append("g")
         .attr("class", "legend-item")
         .attr("transform", (d, i) => `translate(0, ${i * 25})`);
-    legendItems.append("rect")
+    legendGroup.append("rect")
         .attr("width", 14)
         .attr("height", 14)
         .attr("rx", 3)
-        .attr("fill", d => colorScale(d));
-    legendItems.append("text")
+        .attr("fill", d => colorScale(d))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 0.7);
+    legendGroup.append("text")
         .attr("x", 22)
         .attr("y", 11)
         .style("fill", "#ffffff")
@@ -111,15 +117,51 @@ Promise.all([
         .style("font-weight", "600")
         .text(d => d);
 
+    legendGroup.style("cursor", "pointer");
+
+    function refreshLegend() {
+        legendGroup
+            .transition()
+            .duration(100)
+            .attr("opacity", r => {
+                if (window.selectedRanges.size === 0) return 1;
+                return window.selectedRanges.has(r) ? 1 : 0.5;
+            });
+        legendGroup.selectAll("rect").attr("stroke-width", r =>
+            window.selectedRanges.has(r) ? 2.5 : 0.7
+        );
+        legendGroup.selectAll("text").style("font-weight", r =>
+            window.selectedRanges.has(r) ? "700" : "600"
+        );
+    }
+
+    legendGroup.on("click", function (event, d) {
+        if (window.selectedRanges.has(d)) {
+            window.selectedRanges.delete(d);
+        } else {
+            window.selectedRanges.add(d);
+        }
+        refreshLegend();
+
+        update(+slider.node().value);
+        window.dispatchEvent(new Event("selectedFilterChanged"));
+    });
+
 function update(selectedYear) {
     const gdpFiltered = gdpData.filter(d => d.Year === selectedYear);
 
-    const gdpFinalized = gdpFiltered.map(d => ({
-        Entity: d.Entity || d.entity, 
+    const gdpAll = gdpFiltered.map(d => ({
+        Entity: d.Entity || d.entity,
         Code: d.Code,
         gdp: d["Agriculture, forestry, and fishing, value added (% of GDP)"],
         continent: continentMap.get(d.Code) || "Unknown"
     })).filter(d => d.continent !== "Unknown");
+    let gdpFinalized = gdpAll;
+    if (window.selectedRanges.size > 0) {
+        gdpFinalized = gdpAll.filter(d =>
+            window.selectedRanges.has(d.continent)
+        );
+    }
 
     const stackOrder = colorScale.domain(); 
 
@@ -130,10 +172,11 @@ function update(selectedYear) {
         .domain(xScale.domain())
         .thresholds(xScale.ticks(20));
 
-    const bins = histogram(gdpFinalized);
+    const binsAll = histogram(gdpAll);
+    const binsFiltered = histogram(gdpFinalized);
 
     const stackedData = [];
-    bins.forEach(bin => {
+    binsFiltered.forEach(bin => {
         const grouped = d3.groups(bin, d => d.continent);
         grouped.sort((a, b) => stackOrder.indexOf(a[0]) - stackOrder.indexOf(b[0]));
 
@@ -152,8 +195,7 @@ function update(selectedYear) {
         });
     });
 
-    yScale.domain([0, d3.max(bins, d => d.length)]).nice();
-    
+    yScale.domain([0, d3.max(binsAll, d => d.length)]).nice();
     xAxisGroup.call(d3.axisBottom(xScale));
     yAxisGroup.call(d3.axisLeft(yScale));
 
@@ -178,6 +220,11 @@ function update(selectedYear) {
     .attr("stroke", "#1a1a1a")
     .attr("stroke-width", "0.5px");
 }
+
+    window.addEventListener("selectedFilterChanged", () => {
+        refreshLegend();
+        update(+slider.node().value);
+    });
 
     update(years[0]);
 });

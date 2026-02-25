@@ -1,5 +1,9 @@
 import * as d3 from "d3";
 
+if (!window.selectedRanges) {
+    window.selectedRanges = new Set();
+}
+
 const width = 800;
 const height = 500;
 const margin = { top: 40, right: 40, bottom: 60, left: 80 };
@@ -106,18 +110,20 @@ Promise.all([
     const legend = svg.append("g")
         .attr("transform", `translate(${width - 145}, ${30})`);
     const continents = colorScale.domain();
-    const legendItems = legend.selectAll(".legend-item")
+    const legendGroup = legend.selectAll(".legend-item")
         .data(continents)
         .enter()
         .append("g")
         .attr("class", "legend-item")
         .attr("transform", (d, i) => `translate(0, ${i * 25})`);
-    legendItems.append("rect")
+    legendGroup.append("rect")
         .attr("width", 14)
         .attr("height", 14)
         .attr("rx", 3)
-        .attr("fill", d => colorScale(d));
-    legendItems.append("text")
+        .attr("fill", d => colorScale(d))
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 0.7);
+    legendGroup.append("text")
         .attr("x", 22)
         .attr("y", 11)
         .style("fill", "#ffffff")
@@ -125,13 +131,43 @@ Promise.all([
         .style("font-weight", "600")
         .text(d => d);
 
+    legendGroup.style("cursor", "pointer");
+
+    function refreshLegend() {
+        legendGroup
+            .transition()
+            .duration(100)
+            .attr("opacity", r => {
+                if (window.selectedRanges.size === 0) return 1;
+                return window.selectedRanges.has(r) ? 1 : 0.5;
+            });
+        legendGroup.selectAll("rect").attr("stroke-width", r =>
+            window.selectedRanges.has(r) ? 2.5 : 0.7
+        );
+        legendGroup.selectAll("text").style("font-weight", r =>
+            window.selectedRanges.has(r) ? "700" : "600"
+        );
+    }
+
+    legendGroup.on("click", function (event, d) {
+        if (window.selectedRanges.has(d)) {
+            window.selectedRanges.delete(d);
+        } else {
+            window.selectedRanges.add(d);
+        }
+        refreshLegend();
+
+        update(+slider.node().value);
+        window.dispatchEvent(new Event("selectedFilterChanged"));
+    });
+
     function update(selectedYear) {
 
         const yieldFiltered = yieldData.filter(d => d.Year === selectedYear);
         const gdpFiltered = gdpData.filter(d => d.Year === selectedYear);
 
         // Merge
-        const merged = yieldFiltered.map(d => {
+        let merged = yieldFiltered.map(d => {
             const match = gdpFiltered.find(g => g.Code === d.Code);
             if (match) {
                 return {
@@ -148,6 +184,11 @@ Promise.all([
         yScale.domain([0, d3.max(merged, d => d.gdp)]);
         xAxisGroup.call(d3.axisBottom(xScale));
         yAxisGroup.call(d3.axisLeft(yScale));
+
+        // continent filter
+        if (window.selectedRanges.size > 0) {
+            merged = merged.filter(d => window.selectedRanges.has(d.continent));
+        }
 
         const circles = svg.selectAll("circle")
             .data(merged, d => d.Code);
@@ -184,8 +225,14 @@ Promise.all([
             .attr("cx", d => xScale(d.yield))
             .attr("cy", d => yScale(d.gdp));
 
-        circles.exit().remove();
+        circles.exit()
+            .remove();
     }
+
+    window.addEventListener("selectedFilterChanged", () => {
+        refreshLegend();
+        update(+slider.node().value);
+    });
 
     update(years[0]);
 });
